@@ -10,9 +10,9 @@ export default function Dashboard() {
   const currentYearGVGioi = teacherAchievements.filter(a => a.namHoc === '2023-2024' && a.tenThanhTich.includes('Giáo viên giỏi')).length;
   const skknCount = teacherAchievements.filter(a => a.loai === 'Sáng kiến cải tiến').length;
 
-  const totalStudentAchieve = studentAchievements.length;
-  const highLevelAchieve = studentAchievements.filter(a => ['Quốc tế', 'Quốc gia', 'Tỉnh/Thành phố'].includes(a.capDo)).length;
-  const xsStudentAchieve = studentAchievements.filter(a => a.loai === 'Học sinh xuất sắc').length;
+  const schoolLevelAchieve = studentAchievements.filter(a => a.capDo === 'Trường').length;
+  const regionalCityAchieve = studentAchievements.filter(a => ['Khu vực', 'Tỉnh/Thành phố'].includes(a.capDo)).length;
+  const nationalInternationalAchieve = studentAchievements.filter(a => ['Quốc tế', 'Quốc gia'].includes(a.capDo)).length;
   const techAchieve = studentAchievements.filter(a => ['Tin học', 'Robotics'].includes(a.bomon)).length;
 
   // Recent 5 Student Achievements
@@ -42,10 +42,10 @@ export default function Dashboard() {
 
       {/* Stats row 2 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Tổng giải HS" value={totalStudentAchieve} icon={<Trophy className="text-amber-600" />} color="bg-amber-100" />
-        <StatCard title="Giải Tỉnh trở lên" value={highLevelAchieve} icon={<Medal className="text-red-600" />} color="bg-red-100" />
-        <StatCard title="HS Xuất sắc" value={xsStudentAchieve} icon={<Star className="text-orange-600" />} color="bg-orange-100" />
-        <StatCard title="Robotics / IT" value={techAchieve} icon={<Code className="text-teal-600" />} color="bg-teal-100" />
+        <StatCard title="HSG cấp Trường" value={schoolLevelAchieve} icon={<Trophy className="text-amber-600" />} color="bg-amber-100" />
+        <StatCard title="HSG Khu vực, Thành phố" value={regionalCityAchieve} icon={<Medal className="text-red-600" />} color="bg-red-100" />
+        <StatCard title="HSG Quốc gia, Quốc tế" value={nationalInternationalAchieve} icon={<Star className="text-orange-600" />} color="bg-orange-100" />
+        <StatCard title="Hoạt động trải nghiệm STEM" value={techAchieve} icon={<Code className="text-teal-600" />} color="bg-teal-100" />
       </div>
 
       {/* Charts */}

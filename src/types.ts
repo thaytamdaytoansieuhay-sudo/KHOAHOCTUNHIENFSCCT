@@ -22,6 +22,16 @@ export interface BirthdayWish {
   date: string;
 }
 
+export interface DocumentItem {
+  id: string;
+  name: string;
+  type: string; // 'image', 'pdf', 'doc', 'other'
+  size: number;
+  dataUrl: string;
+  uploadedAt: string;
+  uploader: string;
+}
+
 export interface Teacher {
   id: string;
   hoTen: string;

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Teacher, TeacherAchievement, Student, StudentAchievement, Mentorship, ScheduleEvent, BirthdayWish } from '../types';
+import { Teacher, TeacherAchievement, Student, StudentAchievement, Mentorship, ScheduleEvent, BirthdayWish, DocumentItem } from '../types';
 
 // Mock Data
 const INITIAL_TEACHERS: Teacher[] = [
@@ -136,6 +136,8 @@ const INITIAL_WISHES: BirthdayWish[] = [
   { id: 'w1', teacherId: 't1', senderName: 'Học sinh lớp 12A1', message: 'Chúc thầy sinh nhật vui vẻ, hạnh phúc và thành công!', date: '2024-05-15T08:00:00Z' }
 ];
 
+const INITIAL_DOCUMENTS: DocumentItem[] = [];
+
 interface AppState {
   teachers: Teacher[];
   teacherAchievements: TeacherAchievement[];
@@ -146,8 +148,16 @@ interface AppState {
   mentorships: Mentorship[];
   scheduleEvents: ScheduleEvent[];
   birthdayWishes: BirthdayWish[];
+  documents: DocumentItem[];
+
+  // Auth
+  isAuthenticated: boolean;
+  userEmail: string | null;
 
   // Actions
+  login: (email: string) => void;
+  logout: () => void;
+  
   addTeacher: (t: Teacher) => void;
   updateTeacher: (id: string, t: Partial<Teacher>) => void;
   deleteTeacher: (id: string) => void;
@@ -174,6 +184,9 @@ interface AppState {
 
   addBirthdayWish: (w: BirthdayWish) => void;
   deleteBirthdayWish: (id: string) => void;
+  
+  addDocument: (doc: DocumentItem) => void;
+  deleteDocument: (id: string) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -186,6 +199,13 @@ export const useStore = create<AppState>()(
       mentorships: INITIAL_MENTORSHIPS,
       scheduleEvents: INITIAL_SCHEDULES,
       birthdayWishes: INITIAL_WISHES,
+      documents: INITIAL_DOCUMENTS,
+      
+      isAuthenticated: false,
+      userEmail: null,
+      
+      login: (email) => set({ isAuthenticated: true, userEmail: email }),
+      logout: () => set({ isAuthenticated: false, userEmail: null }),
       
       addTeacher: (t) => set((state) => ({ teachers: [...state.teachers, t] })),
       updateTeacher: (id, t) => set((state) => ({ teachers: state.teachers.map((x) => x.id === id ? { ...x, ...t } : x) })),
@@ -213,6 +233,9 @@ export const useStore = create<AppState>()(
 
       addBirthdayWish: (w) => set((state) => ({ birthdayWishes: [w, ...state.birthdayWishes] })),
       deleteBirthdayWish: (id) => set((state) => ({ birthdayWishes: state.birthdayWishes.filter((x) => x.id !== id) })),
+
+      addDocument: (doc) => set((state) => ({ documents: [doc, ...state.documents] })),
+      deleteDocument: (id) => set((state) => ({ documents: state.documents.filter((x) => x.id !== id) })),
     }),
     {
       name: 'tktn_storage',

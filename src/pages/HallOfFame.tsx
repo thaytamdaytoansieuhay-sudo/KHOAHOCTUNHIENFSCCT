@@ -53,7 +53,7 @@ export default function HallOfFame() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-red-600">
             BẢNG VÀNG VINH DANH
           </h1>
-          <p className="text-gray-600 text-lg">Tôn vinh những cá nhân xuất sắc nhất Tổ Khoa học Tự nhiên</p>
+          <p className="text-gray-600 text-lg">Tôn vinh những cá nhân xuất sắc nhất Tổ Khoa học Tự nhiên - THPT FPT Cần Thơ</p>
           
           <div className="flex justify-center mt-6">
             <select 

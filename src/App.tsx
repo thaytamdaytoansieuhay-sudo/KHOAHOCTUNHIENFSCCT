@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useStore } from './store/useStore';
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Teachers from './pages/Teachers';
@@ -15,8 +16,16 @@ import Reports from './pages/Reports';
 import TeacherBirthdays from './pages/TeacherBirthdays';
 import Mentorships from './pages/Mentorships';
 import Schedule from './pages/Schedule';
+import Documents from './pages/Documents';
+import Login from './pages/Login';
 
 export default function App() {
+  const { isAuthenticated } = useStore();
+
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
   return (
     <BrowserRouter>
       <DashboardLayout>
@@ -31,6 +40,7 @@ export default function App() {
           <Route path="/hall-of-fame" element={<HallOfFame />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/documents" element={<Documents />} />
         </Routes>
       </DashboardLayout>
     </BrowserRouter>

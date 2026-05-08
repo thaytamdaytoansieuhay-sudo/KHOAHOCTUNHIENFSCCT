@@ -13,9 +13,12 @@ import {
   BarChart,
   CalendarDays,
   Target,
-  Gift
+  Gift,
+  LogOut,
+  FolderOpen
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useStore } from '../store/useStore';
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Tổng quan' },
@@ -28,10 +31,12 @@ const navItems = [
   { path: '/hall-of-fame', icon: Star, label: 'Bảng vàng' },
   { path: '/schedule', icon: CalendarDays, label: 'Lịch làm việc' },
   { path: '/reports', icon: FileBox, label: 'Báo cáo' },
+  { path: '/documents', icon: FolderOpen, label: 'Kho tài liệu' },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const { logout, userEmail } = useStore();
   const activeLabel = navItems.find((item) => item.path === location.pathname)?.label || 'Chi tiết';
 
   return (
@@ -39,9 +44,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-[#1E40AF] text-white flex-shrink-0 relative sticky top-0 md:h-screen overflow-y-auto">
         <div className="p-4 md:p-6 flex items-center gap-3 border-b border-blue-800">
-          <Atom className="w-8 h-8 text-yellow-300" />
-          <div>
-            <h1 className="font-bold text-lg tracking-wide leading-tight">TỔ KHOA HỌC TỰ NHIÊN</h1>
+          <Atom className="w-10 h-10 text-orange-400 shrink-0" />
+          <div className="flex flex-col">
+            <h1 className="font-bold text-base tracking-wide leading-tight uppercase text-white">Tổ Khoa học Tự nhiên</h1>
+            <p className="text-[10px] text-orange-300 mt-1 tracking-wider font-bold">TRƯỜNG THPT FPT CẦN THƠ</p>
           </div>
         </div>
         <nav className="p-4 flex flex-col gap-1">
@@ -69,14 +75,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-4">
             <h2 className="text-xl font-bold text-gray-800">{activeLabel}</h2>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200">
-              AD
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 border-r border-gray-200 pr-4">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200 uppercase">
+                {userEmail ? userEmail.charAt(0) : 'U'}
+              </div>
+              <div className="hidden md:block">
+                <p className="text-sm font-semibold">{userEmail || 'Admin'}</p>
+                <p className="text-xs text-gray-500">Tổ trưởng</p>
+              </div>
             </div>
-            <div className="hidden md:block">
-              <p className="text-sm font-semibold">Admin Quản lý</p>
-              <p className="text-xs text-gray-500">Tổ trưởng</p>
-            </div>
+            <button 
+              onClick={logout}
+              className="text-gray-500 hover:text-red-600 transition flex items-center gap-1"
+              title="Đăng xuất"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="hidden md:inline text-sm font-medium">Đăng xuất</span>
+            </button>
           </div>
         </header>
         
