@@ -29,17 +29,17 @@ export default function Mentorships() {
   }, [mentorships, searchTerm, statusFilter, subjectFilter, teachers, students]);
 
   // Thống kê
-  const activePairs = mentorships.filter(m => m.trangThai === 'Đang hướng dẫn').length;
-  const completedPairs = mentorships.filter(m => m.trangThai === 'Hoàn thành').length;
+  const activePairs = filteredMentorships.filter(m => m.trangThai === 'Đang hướng dẫn').length;
+  const completedPairs = filteredMentorships.filter(m => m.trangThai === 'Hoàn thành').length;
 
   const topTeacher = useMemo(() => {
     const counts: Record<string, number> = {};
-    mentorships.forEach(m => {
+    filteredMentorships.forEach(m => {
       counts[m.teacherId] = (counts[m.teacherId] || 0) + 1;
     });
     const topId = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
     return teachers.find(t => t.id === topId);
-  }, [mentorships, teachers]);
+  }, [filteredMentorships, teachers]);
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,6 +99,42 @@ export default function Mentorships() {
         </div>
       </div>
 
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="flex flex-wrap gap-4 w-full md:w-auto">
+          <div className="relative flex-1 min-w-[200px] md:w-64">
+            <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Tìm kiếm mục tiêu, tên..." 
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-100 transition-shadow"
+            />
+          </div>
+          <select value={subjectFilter} onChange={e => setSubjectFilter(e.target.value)} className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none bg-white min-w-[120px]">
+            <option value="All">Mọi bộ môn</option>
+            <option value="Toán">Toán</option>
+            <option value="Vật Lý">Vật Lý</option>
+            <option value="Hóa học">Hóa học</option>
+            <option value="Sinh học">Sinh học</option>
+            <option value="Tin học">Tin học</option>
+            <option value="Robotics">Robotics</option>
+          </select>
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none bg-white min-w-[150px]">
+            <option value="All">Mọi trạng thái</option>
+            <option value="Đang hướng dẫn">Đang hướng dẫn</option>
+            <option value="Hoàn thành">Hoàn thành</option>
+            <option value="Tạm dừng">Tạm dừng</option>
+          </select>
+        </div>
+        <button 
+          onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition w-full md:w-auto justify-center shadow-sm whitespace-nowrap"
+        >
+          <Plus className="w-4 h-4" /> Thêm Mentor
+        </button>
+      </div>
+
       {activeTab === 'stats' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4">
@@ -133,42 +169,6 @@ export default function Mentorships() {
 
       {activeTab === 'list' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-4 md:p-6 border-b border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50/50">
-            <div className="flex gap-4 w-full md:w-auto">
-              <div className="relative flex-1 md:w-64">
-                <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input 
-                  type="text" 
-                  placeholder="Tìm kiếm mục tiêu, tên..." 
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-100 transition-shadow"
-                />
-              </div>
-              <select value={subjectFilter} onChange={e => setSubjectFilter(e.target.value)} className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none bg-white min-w-[120px]">
-                <option value="All">Mọi bộ môn</option>
-                <option value="Toán">Toán</option>
-                <option value="Vật Lý">Vật Lý</option>
-                <option value="Hóa học">Hóa học</option>
-                <option value="Sinh học">Sinh học</option>
-                <option value="Tin học">Tin học</option>
-                <option value="Robotics">Robotics</option>
-              </select>
-              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none bg-white min-w-[150px]">
-                <option value="All">Mọi trạng thái</option>
-                <option value="Đang hướng dẫn">Đang hướng dẫn</option>
-                <option value="Hoàn thành">Hoàn thành</option>
-                <option value="Tạm dừng">Tạm dừng</option>
-              </select>
-            </div>
-            <button 
-              onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition w-full md:w-auto justify-center shadow-sm"
-            >
-              <Plus className="w-4 h-4" /> Thêm Mentor
-            </button>
-          </div>
-
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -233,8 +233,8 @@ export default function Mentorships() {
 
       {activeTab === 'teacher_view' && (
         <div className="space-y-6">
-          {teachers.filter(t => mentorships.some(m => m.teacherId === t.id)).map(teacher => {
-            const tMentors = mentorships.filter(m => m.teacherId === teacher.id);
+          {teachers.filter(t => filteredMentorships.some(m => m.teacherId === t.id)).map(teacher => {
+            const tMentors = filteredMentorships.filter(m => m.teacherId === teacher.id);
             const total = tMentors.length;
             const completed = tMentors.filter(m => m.trangThai === 'Hoàn thành').length;
             const active = tMentors.filter(m => m.trangThai === 'Đang hướng dẫn').length;
@@ -306,8 +306,8 @@ export default function Mentorships() {
 
       {activeTab === 'student_view' && (
         <div className="space-y-6">
-          {students.filter(s => mentorships.some(m => m.studentId === s.id)).map(student => {
-            const sMentors = mentorships.filter(m => m.studentId === student.id);
+          {students.filter(s => filteredMentorships.some(m => m.studentId === s.id)).map(student => {
+            const sMentors = filteredMentorships.filter(m => m.studentId === student.id);
             return (
               <div key={student.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center justify-between">
